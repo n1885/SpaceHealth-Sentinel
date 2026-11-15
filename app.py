@@ -43,7 +43,7 @@ if evidence_dataset =="ISS Bone Countermeasure Study":
         "Mean Mission Duration (days)": [172, 157, 164],
         "Mission Duration SD (days)": [28, 28, 15],
         "Lumbar Spine BMD Change (%)": [-4.4, -1.9, 2.8],
-        "Trab becular Bone Score Change (%)": [-3.0, 0.2, -1.5]
+        "Trabecular Bone Score Change (%)": [-3.0, 0.2, -1.5]
     })
 
     st.subheader("ISS Bone Countermeasure Comparison")
@@ -60,18 +60,18 @@ if evidence_dataset =="ISS Bone Countermeasure Study":
     fig = go.Figure()
 
     fig.add_trace(go.Bar(
-
-    x=bone_data["Countermeasure"],
-    text=bone_data[metric],
-    textposition="outside",
-    marker_color=["#38bdf8","#818cf8", "#34d399"]
+        x=bone_data["Countermeasure"],
+        y=bone_data[metric],
+        text=bone_data[metric],
+        textposition="outside",
+        marker_color=["#38bdf8", "#818cf8", "#34d399"]
     ))
 
     fig.add_hline(
     y=0,
     line_dash="dash",
     line_color="white"
-)
+    )
 
     fig.update_layout(
     title="Published Group-Level Changes",
@@ -80,15 +80,17 @@ if evidence_dataset =="ISS Bone Countermeasure Study":
     template="plotly_dark",
     height=440
    )
+    st.plotly_chart(fig, use_container_width=True)
 
-
+   
+if evidence_dataset == "ISS Bone Countermeasure Study":
     st.dataframe(
-    bone_data,
-    hide_index=True,
-    use_container_width=True
-   )
+        bone_data,
+        hide_index=True,
+        use_container_width=True
+    )
 
-    st.info(
+st.info(
     """
     These are published group-level observations.
     They are not individual predictions or
@@ -96,37 +98,35 @@ if evidence_dataset =="ISS Bone Countermeasure Study":
     """
    )
 
-    st.link_button(
+st.link_button(
     "Read Original Bone Study",
     "https://pmc.ncbi.nlm.nih.gov/articles/PMC12799719/"
    )
 
 
 
-else:
-    radiation_data = pd.DataFrame({
+
+st.subheader("Mouse Blood Radiation Experiment")
+
+radiation_data = pd.DataFrame({
         "Radiation Dose (Gy)": [0, 2, 8],
         "Biological Samples": [7, 5, 6],
         "Sampling Time (hours)": [6, 6, 6]
     })
 
-    st.subheader("Mouse Blood Radiation Experiment")
-
-    fig =go.Figure()
-    fig.add_trace(go.Bar(
-        x=[f"{dose}Gy" for dose in radiation_data["Radiation Dose (Gy)"]],
-        y=radiation_data["Biological Samples"],
-        textposition="outside",
-        marker_color=["#38bdf8", "#818cf8", "#34d399"]
+fig = go.Figure()
+fig.add_trace(go.Bar(
+        x=[f"{dose} Gy" for dose in radiation_data["Radiation Dose (Gy)"]],
+        y=radiation_data["Biological Samples"]
     ))
 
-    fig.add_hline(
+fig.add_hline(
         y=0,
         line_dash="dash",
         line_color="white"
     )
 
-    fig.update_layout(
+fig.update_layout(
         title="Radiation Dose vs Biological Samples",
         xaxis_title="Radiation Dose (Gy)",
         yaxis_title="Biological Samples",
@@ -134,31 +134,30 @@ else:
         height=440
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True)
 
-    st.dataframe(
+st.dataframe(
         radiation_data,
         hide_index=True,
         use_container_width=True
     )
 
-    st.info(
+st.info(
         "Mouse blood was collected 6 hours after acute "
         "radiation exposure. This chart shows sample counts, "
         "not radiation-induced biological effect sizes."
     )
 
-    st.link_button(
+st.link_button(
         "Open NASA GeneLab Dataset",
         "https://data.nasa.gov/dataset/identifying-radiation-exposure-biomarkers-from-mouse-blood-transcriptome"
-        "identifying-radiation-exposure-biomarkers-from-mouse-blood-transcriptome"
     )
 
-    st.caption(
-        "Evidence provenance:published bone study and"
-        "NASA GeneLab GLDS-156 metadata."
-        "No syhnthetic measurements or extrapolated mission risks."
-    )
+st.caption(
+    "Evidence provenance: published bone study and "
+    "NASA GeneLab GLDS-156 metadata."
+    "No synthetic measurements or extrapolated mission risks."
+)
 
 st.divider()
 st.header("Risk Prevention & Countermeasures")
@@ -414,6 +413,7 @@ fig_neuro.add_trace(go.Scatter(
     x=[1, 2, 3, 4],
     y=[1, 1, 1, 1],
     mode="lines+markers+text",
+    text=steps,
     textposition="top center", 
     marker=dict(size=24, color=[
         "#64748B", "#E76F51", "#F4A261", "#2A9D8F"
